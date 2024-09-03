@@ -1,0 +1,653 @@
+<html><head><base href="https://thegfxcorner.github.io/">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The GFX Corner - BETA</title>
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+    body {
+        font-family: 'Poppins', Arial, sans-serif;
+        background-color: #121212;
+        color: #ffffff;
+        margin: 0;
+        padding: 0;
+        overflow-x: hidden;
+    }
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+    header {
+        background-color: #1a1a1a;
+        padding: 20px 0;
+        text-align: center;
+        position: relative;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+    h1 {
+        margin: 0;
+        font-size: 2.8em;
+        color: #4da6ff;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        letter-spacing: 2px;
+        font-weight: 700;
+    }
+    h1:hover {
+        color: #8FBC8F;
+        text-shadow: 
+            1px 1px 0 #4da6ff,
+            2px 2px 0 #4da6ff,
+            3px 3px 0 #4da6ff,
+            4px 4px 0 #4da6ff,
+            5px 5px 0 #4da6ff,
+            6px 6px 10px rgba(0,0,0,0.5);
+        transform: perspective(500px) rotateX(10deg) rotateY(-10deg) translateZ(10px);
+        filter: brightness(1.2);
+    }
+    .beta-tag {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background-color: #4da6ff;
+        color: #121212;
+        padding: 5px 10px;
+        border-radius: 25px;
+        font-weight: 600;
+        font-size: 0.8em;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+    .login-button, .admin-label {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        padding: 8px 15px;
+        border-radius: 25px;
+        font-weight: 600;
+        font-size: 0.9em;
+        letter-spacing: 1px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+    .login-button {
+        background-color: #4da6ff;
+        color: #121212;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+    }
+    .login-button:hover {
+        background-color: #3a8ad6;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    }
+    .admin-label {
+        background-color: #1a1a1a;
+        color: #FFD700;
+        display: none;
+    }
+    .admin-label i {
+        margin-right: 5px;
+    }
+    .login-modal, .welcome-modal, .description-modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,0.7);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+    .login-form, .welcome-content, .description-content {
+        background-color: #1a1a1a;
+        padding: 30px;
+        border-radius: 15px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 300px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    }
+    .welcome-content, .description-content {
+        width: 60%;
+        max-width: 600px;
+    }
+    .close-button {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: color 0.3s ease;
+    }
+    .close-button:hover {
+        color: #fff;
+    }
+    input[type="text"], input[type="password"], input[type="file"], textarea {
+        width: 100%;
+        padding: 12px;
+        margin: 10px 0;
+        border: none;
+        background-color: #2a2a2a;
+        color: #ffffff;
+        border-radius: 5px;
+        font-size: 1em;
+        transition: all 0.3s ease;
+        box-sizing: border-box;
+    }
+    input[type="text"]:focus, input[type="password"]:focus, input[type="file"]:focus, textarea:focus {
+        outline: none;
+        box-shadow: 0 0 0 2px #4da6ff;
+    }
+    button {
+        background-color: #4da6ff;
+        color: #121212;
+        border: none;
+        padding: 12px 20px;
+        border-radius: 25px;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 1em;
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+    button:hover {
+        background-color: #3a8ad6;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    }
+    .gallery {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-around;
+        margin-top: 30px;
+        min-height: 300px;
+    }
+    .image-container {
+        width: 300px;
+        margin: 15px;
+        background-color: #1a1a1a;
+        border-radius: 15px;
+        overflow: hidden;
+        position: relative;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        cursor: pointer;
+    }
+    .image-container:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+    }
+    .image-container img {
+        width: 100%;
+        height: auto;
+        display: block;
+    }
+    .image-title {
+        padding: 15px;
+        font-size: 1.1em;
+        font-weight: 600;
+        color: #4da6ff;
+    }
+    .image-description {
+        display: none;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0,0,0,0.8);
+        padding: 20px;
+        overflow-y: auto;
+        color: #fff;
+        font-size: 0.9em;
+    }
+    .floating-line {
+        position: absolute;
+        width: 100px;
+        height: 2px;
+        background-color: rgba(77, 166, 255, 0.5);
+        transition: all 0.5s ease;
+        pointer-events: none;
+    }
+    #adminPanel {
+        display: none;
+        background-color: #1a1a1a;
+        padding: 25px;
+        border-radius: 15px;
+        margin-top: 30px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+    .no-images-message {
+        color: #777;
+        font-size: 1.3em;
+        text-align: center;
+        margin-top: 100px;
+        font-weight: 300;
+        letter-spacing: 1px;
+    }
+    h2 {
+        color: #4da6ff;
+        font-size: 1.8em;
+        margin-bottom: 20px;
+        font-weight: 600;
+        letter-spacing: 1px;
+    }
+    #imagePreview {
+        max-width: 100%;
+        max-height: 200px;
+        margin-top: 10px;
+        border-radius: 5px;
+    }
+    .preview-container {
+        display: none;
+        margin-top: 20px;
+        padding: 20px;
+        background-color: #2a2a2a;
+        border-radius: 10px;
+    }
+    .preview-container h3 {
+        color: #4da6ff;
+        margin-bottom: 10px;
+    }
+    .welcome-step {
+        margin-bottom: 20px;
+    }
+    .welcome-step h3 {
+        color: #4da6ff;
+        margin-bottom: 10px;
+    }
+    .welcome-step p {
+        margin-bottom: 15px;
+    }
+    .welcome-nav {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 20px;
+    }
+    .welcome-nav button {
+        padding: 10px 20px;
+    }
+</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <header>
+        <h1>The GFX Corner</h1>
+        <span class="beta-tag">BETA</span>
+        <div class="login-button" onclick="showLoginModal()">Login</div>
+        <div class="admin-label"><i class="fas fa-hammer"></i> Admin Lisaish</div>
+    </header>
+
+    <div class="login-modal" id="loginModal">
+        <div class="login-form">
+            <span class="close-button" onclick="closeLoginModal()">&times;</span>
+            <h2>Admin Login</h2>
+            <input type="text" id="username" placeholder="Username" required>
+            <input type="password" id="password" placeholder="Password" required>
+            <button onclick="login()">Login</button>
+        </div>
+    </div>
+
+    <div class="welcome-modal" id="welcomeModal">
+        <div class="welcome-content">
+            <span class="close-button" onclick="closeWelcomeModal()">&times;</span>
+            <h2>Welcome to The GFX Corner!</h2>
+            <div id="welcomeStep1" class="welcome-step">
+                <h3>Step 1: About Us</h3>
+                <p>The GFX Corner is your go-to place for stunning graphics and visual inspiration. We're a community-driven platform where artists and designers can showcase their work and find inspiration from others.</p>
+            </div>
+            <div id="welcomeStep2" class="welcome-step" style="display: none;">
+                <h3>Step 2: Explore the Gallery</h3>
+                <p>Browse through our gallery to see amazing artwork from talented creators. Click on any image to view its details and description.</p>
+            </div>
+            <div id="welcomeStep3" class="welcome-step" style="display: none;">
+                <h3>Step 3: Join the Community</h3>
+                <p>Sign up to upload your own creations, interact with other artists, and become part of our vibrant community. We can't wait to see what you'll bring to The GFX Corner!</p>
+            </div>
+            <div class="welcome-nav">
+                <button id="prevStep" onclick="changeWelcomeStep(-1)" style="display: none;">Previous</button>
+                <button id="nextStep" onclick="changeWelcomeStep(1)">Next</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="description-modal" id="descriptionModal">
+        <div class="description-content">
+            <span class="close-button" onclick="closeDescriptionModal()">&times;</span>
+            <h2 id="descriptionTitle"></h2>
+            <p id="descriptionText"></p>
+        </div>
+    </div>
+
+    <div class="container">
+        <div id="adminPanel">
+            <h2>Admin Panel</h2>
+            <input type="file" id="imageUpload" accept="image/*" onchange="previewImage()">
+            <img id="imagePreview" src="" alt="Image Preview" style="display: none;">
+            <input type="text" id="imageTitle" placeholder="Image Title">
+            <textarea id="imageDescription" placeholder="Image Description" rows="4"></textarea>
+            <button onclick="uploadImage()">Upload Image</button>
+            <button onclick="togglePreview()">Toggle Preview</button>
+            <div class="preview-container" id="previewContainer">
+                <h3>Preview</h3>
+                <div class="image-container" onclick="showDescription(document.getElementById('previewTitle').textContent, document.getElementById('previewDescription').textContent)">
+                    <img id="previewImg" src="" alt="Preview">
+                    <div id="previewTitle" class="image-title"></div>
+                    <div id="previewDescription" class="image-description"></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="gallery" class="gallery"></div>
+    </div>
+
+    <script>
+        const ADMIN_USERNAME = 'LISAISH';
+        const ADMIN_PASSWORD = 'adminlisaishis';
+        let isLoggedIn = false;
+        let images = [];
+        let floatingLines = [];
+        let currentWelcomeStep = 1;
+
+        function showLoginModal() {
+            const modal = document.getElementById('loginModal');
+            modal.style.display = 'block';
+            setTimeout(() => {
+                modal.style.opacity = '1';
+            }, 10);
+        }
+
+        function closeLoginModal() {
+            const modal = document.getElementById('loginModal');
+            modal.style.opacity = '0';
+            setTimeout(() => {
+                modal.style.display = 'none';
+            }, 300);
+        }
+
+        function showWelcomeModal() {
+            const modal = document.getElementById('welcomeModal');
+            modal.style.display = 'block';
+            setTimeout(() => {
+                modal.style.opacity = '1';
+            }, 10);
+        }
+
+        function closeWelcomeModal() {
+            const modal = document.getElementById('welcomeModal');
+            modal.style.opacity = '0';
+            setTimeout(() => {
+                modal.style.display = 'none';
+            }, 300);
+            localStorage.setItem('welcomeShown', 'true');
+        }
+
+        function showDescription(title, description) {
+            const modal = document.getElementById('descriptionModal');
+            const titleElement = document.getElementById('descriptionTitle');
+            const textElement = document.getElementById('descriptionText');
+
+            titleElement.textContent = title;
+            textElement.textContent = description;
+
+            modal.style.display = 'block';
+            setTimeout(() => {
+                modal.style.opacity = '1';
+            }, 10);
+        }
+
+        function closeDescriptionModal() {
+            const modal = document.getElementById('descriptionModal');
+            modal.style.opacity = '0';
+            setTimeout(() => {
+                modal.style.display = 'none';
+            }, 300);
+        }
+
+        function changeWelcomeStep(direction) {
+            currentWelcomeStep += direction;
+            updateWelcomeStep();
+        }
+
+        function updateWelcomeStep() {
+            for (let i = 1; i <= 3; i++) {
+                document.getElementById(`welcomeStep${i}`).style.display = i === currentWelcomeStep ? 'block' : 'none';
+            }
+            document.getElementById('prevStep').style.display = currentWelcomeStep > 1 ? 'block' : 'none';
+            document.getElementById('nextStep').textContent = currentWelcomeStep < 3 ? 'Next' : 'Get Started';
+            if (currentWelcomeStep === 3) {
+                document.getElementById('nextStep').onclick = closeWelcomeModal;
+            } else {
+                document.getElementById('nextStep').onclick = () => changeWelcomeStep(1);
+            }
+        }
+
+        function login() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
+                isLoggedIn = true;
+                closeLoginModal();
+                document.getElementById('adminPanel').style.display = 'block';
+                document.querySelector('.login-button').style.display = 'none';
+                document.querySelector('.admin-label').style.display = 'block';
+                alert('Login successful!');
+            } else {
+                alert('Invalid credentials!');
+            }
+        }
+
+        function previewImage() {
+            const fileInput = document.getElementById('imageUpload');
+            const preview = document.getElementById('imagePreview');
+            const previewImg = document.getElementById('previewImg');
+
+            const file = fileInput.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                    previewImg.src = e.target.result;
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function togglePreview() {
+            const previewContainer = document.getElementById('previewContainer');
+            const previewImg = document.getElementById('previewImg');
+            const previewTitle = document.getElementById('previewTitle');
+            const previewDescription = document.getElementById('previewDescription');
+            const titleInput = document.getElementById('imageTitle');
+            const descriptionInput = document.getElementById('imageDescription');
+
+            if (previewContainer.style.display === 'none' || previewContainer.style.display === '') {
+                previewContainer.style.display = 'block';
+                previewTitle.textContent = titleInput.value || 'No title';
+                previewDescription.textContent = descriptionInput.value || 'No description';
+            } else {
+                previewContainer.style.display = 'none';
+            }
+        }
+
+        function uploadImage() {
+            if (!isLoggedIn) return;
+
+            const fileInput = document.getElementById('imageUpload');
+            const title = document.getElementById('imageTitle').value;
+            const description = document.getElementById('imageDescription').value;
+
+            if (fileInput.files.length > 0) {
+                const file = fileInput.files[0];
+                const reader = new FileReader();
+
+                reader.onload = function(e) {
+                    const newImage = {
+                        src: e.target.result,
+                        title: title,
+                        description: description
+                    };
+                    images.push(newImage);
+                    saveImagesToLocalStorage();
+                    renderGallery();
+                    fileInput.value = '';
+                    document.getElementById('imageTitle').value = '';
+                    document.getElementById('imageDescription').value = '';
+                    document.getElementById('imagePreview').style.display = 'none';
+                    document.getElementById('previewContainer').style.display = 'none';
+                };
+
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function renderGallery() {
+            const gallery = document.getElementById('gallery');
+            gallery.innerHTML = '';
+
+            if (images.length === 0) {
+                const message = document.createElement('div');
+                message.className = 'no-images-message';
+                message.textContent = "Nothing to see here. Wait a little bit, maybe some will come.";
+                gallery.appendChild(message);
+            } else {
+                images.forEach((image, index) => {
+                    const container = document.createElement('div');
+                    container.className = 'image-container';
+
+                    const img = document.createElement('img');
+                    img.src = image.src;
+                    img.alt = image.title;
+                    img.style.pointerEvents = 'none';
+
+                    const title = document.createElement('div');
+                    title.className = 'image-title';
+                    title.textContent = image.title;
+
+                    container.appendChild(img);
+                    container.appendChild(title);
+
+                    container.onclick = () => showDescription(image.title, image.description);
+
+                    if (isLoggedIn) {
+                        const deleteButton = document.createElement('button');
+                        deleteButton.textContent = 'Delete';
+                        deleteButton.onclick = (e) => {
+                            e.stopPropagation();
+                            deleteImage(index);
+                        };
+                        container.appendChild(deleteButton);
+                    }
+
+                    gallery.appendChild(container);
+                });
+            }
+
+            createFloatingLines();
+        }
+
+        function deleteImage(index) {
+            images.splice(index, 1);
+            saveImagesToLocalStorage();
+            renderGallery();
+        }
+
+        function createFloatingLines() {
+            floatingLines.forEach(line => line.remove());
+            floatingLines = [];
+
+            for (let i = 0; i < 20; i++) {
+                const line = document.createElement('div');
+                line.className = 'floating-line';
+                document.body.appendChild(line);
+                floatingLines.push(line);
+
+                const x = Math.random() * window.innerWidth;
+                const y = Math.random() * window.innerHeight;
+                const rotation = Math.random() * 360;
+
+                line.style.left = `${x}px`;
+                line.style.top = `${y}px`;
+                line.style.transform = `rotate(${rotation}deg)`;
+
+                animateLine(line);
+            }
+        }
+
+        function animateLine(line) {
+            const duration = 5000 + Math.random() * 5000;
+            const x = Math.random() * window.innerWidth;
+            const y = Math.random() * window.innerHeight;
+            const rotation = Math.random() * 360;
+
+            line.style.transition = `all ${duration}ms linear`;
+            line.style.left = `${x}px`;
+            line.style.top = `${y}px`;
+            line.style.transform = `rotate(${rotation}deg)`;
+
+            setTimeout(() => animateLine(line), duration);
+        }
+
+        // Disable right-click
+        document.addEventListener('contextmenu', event => event.preventDefault());
+
+        // Mouse move event listener for line movement
+        document.addEventListener('mousemove', (event) => {
+            const mouseX = event.clientX;
+            const mouseY = event.clientY;
+
+            floatingLines.forEach(line => {
+                const rect = line.getBoundingClientRect();
+                const lineX = rect.left + rect.width / 2;
+                const lineY = rect.top + rect.height / 2;
+
+                const deltaX = mouseX - lineX;
+                const deltaY = mouseY - lineY;
+
+                const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+
+                if (distance < 200) {
+                    const moveX = -deltaX * 0.05;
+                    const moveY = -deltaY * 0.05;
+
+                    line.style.transform += ` translate(${moveX}px, ${moveY}px)`;
+                }
+            });
+        });
+
+        function saveImagesToLocalStorage() {
+            localStorage.setItem('gfxCornerImages', JSON.stringify(images));
+        }
+
+        function loadImagesFromLocalStorage() {
+            const storedImages = localStorage.getItem('gfxCornerImages');
+            if (storedImages) {
+                images = JSON.parse(storedImages);
+            }
+        }
+
+        // Initial load
+        window.addEventListener('load', () => {
+            loadImagesFromLocalStorage();
+            renderGallery();
+            if (!localStorage.getItem('welcomeShown')) {
+                showWelcomeModal();
+            }
+        });
+
+        // Resize event listener
+        window.addEventListener('resize', createFloatingLines);
+    </script>
+</body>
+</html>
